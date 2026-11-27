@@ -1,0 +1,36 @@
+name: BreezeLOD Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '4.10.3'
+
+      - name: Extract source
+        run: unzip -q BreezeLOD-GitHub-Ready.zip
+
+      - name: Build mod
+        run: |
+          cd BreezeLOD
+          gradle build
+
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: BreezeLOD-1.12.2
+          path: BreezeLOD/build/libs/*.jar
